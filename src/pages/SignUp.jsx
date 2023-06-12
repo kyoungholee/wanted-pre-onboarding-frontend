@@ -11,8 +11,10 @@ export default function SignUp() {
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
 
+  const token = localStorage.getItem("access_token");
+
   const DirectHandler = () => {
-    if (localStorage.getItem("access_token")) {
+    if (token) {
       console.log("이동완료!!");
       navigate("/todo");
     }
