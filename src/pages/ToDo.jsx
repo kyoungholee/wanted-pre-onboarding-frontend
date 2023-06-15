@@ -79,17 +79,10 @@ export default function ToDo() {
     setResult(result.filter((data, idx) => data.id !== id));
     console.log(result);
 
-    const userData = {
-      id: id,
-    };
-
     axios
-      .delete("https://www.pre-onboarding-selection-task.shop/todos/:id", {
+      .delete(`https://www.pre-onboarding-selection-task.shop/todos/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-        },
-        body: {
-          id: id,
         },
       })
       .then((res) => {
