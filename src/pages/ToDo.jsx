@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 export default function ToDo() {
   const [todoList, setTodoList] = useState("");
   const [result, setResult] = useState([]);
+  const [boolValue, setBoolValue] = useState(false);
+  const [isShow, setIsShow] = useState(false);
   const inputRef = useRef();
 
   const token = localStorage.getItem("access_token");
@@ -21,6 +23,7 @@ export default function ToDo() {
 
   const SendHandler = (e) => {
     e.preventDefault();
+    console.log(todoList);
 
     const userData = {
       todo: todoList,
@@ -74,6 +77,28 @@ export default function ToDo() {
     getData();
   }, []);
 
+  const UpdateHandler = (id) => {
+    setIsShow(!isShow);
+    console.log(!result.isCompleted);
+    axios
+      .put(`https://www.pre-onboarding-selection-task.shop/todos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: {
+          todo: todoList,
+          isCompleted: !result.isCompleted,
+        },
+      })
+      .then((res) => {
+        console.log(!result.isCompleted);
+        if (res.status === 200) {
+          console.log("성공~!! ");
+        }
+      });
+  };
+
   const DeleteHandler = (id) => {
     console.log(id);
     setResult(result.filter((data, idx) => data.id !== id));
@@ -113,13 +138,20 @@ export default function ToDo() {
       </form>
 
       <ul>
-        {result.map((item) => (
-          <li key={item.id}>
+        {result.map((item, idx) => (
+          <li key={item.idx}>
             <label>
               <input type="checkbox" />
               <span>{item.todo}</span>
             </label>
-            <button data-testid="modify-button">수정</button>
+            <button
+              data-testid="modify-button"
+              key={item.id}
+              onClick={() => UpdateHandler(item.id)}
+            >
+              {isShow ? "수정" : "보기"}
+            </button>
+
             <button
               data-testid="delete-button"
               key={item.id}
